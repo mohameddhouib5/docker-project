@@ -4,35 +4,42 @@ This is a simple number-guessing game built with Node.js and Docker. Follow the 
 
 ## Prerequisites
 
-- Docker installed
-- Node.js (version 16 or higher recommended)
+* Docker installed
+* Node.js (version 16 or higher recommended)
 
 ## Project Structure
 
+```
 ├── app.js
 ├── package.json
 ├── Dockerfile
 └── public/
-└── index.html
-
+    └── index.html
+```
 
 ## Steps to Set Up and Run the Game
 
-###  1. Clone the Repository
+### 1. Clone the Repository
 
+```bash
 git clone https://github.com/mohameddhouib5/docker-project
 cd docker-project
+```
 
-###  2. Build the Docker Image
+### 2. Build the Docker Image
 
+```bash
 docker build -t node-guess-game .
+```
 
-###  3. Run the Docker Container
+### 3. Run the Docker Container
 
+```bash
 docker run -p 3000:3000 node-guess-game
+```
 
-###  4. Access the Game Open your browser and visit:
+### 4. Access the Game
 
-http://localhost:3000
+Open your browser and visit: http://localhost:3000
 
-have fun 
+Have fun!
