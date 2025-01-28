@@ -1,0 +1,38 @@
+# Node Guess Game with Docker
+
+This is a simple number-guessing game built with Node.js and Docker. Follow the steps below to set it up and run it.
+
+## Prerequisites
+
+- Docker installed
+- Node.js (version 16 or higher recommended)
+
+## Project Structure
+
+├── app.js
+├── package.json
+├── Dockerfile
+└── public/
+└── index.html
+
+
+## Steps to Set Up and Run the Game
+
+###  1. Clone the Repository
+
+git clone https://github.com/mohameddhouib5/docker-project
+cd docker-project
+
+###  2. Build the Docker Image
+
+docker build -t node-guess-game .
+
+###  3. Run the Docker Container
+
+docker run -p 3000:3000 node-guess-game
+
+###  4. Access the Game Open your browser and visit:
+
+http://localhost:3000
+
+have fun 
