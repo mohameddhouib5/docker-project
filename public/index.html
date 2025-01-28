@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Number Master Pro</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #13111C;
+      min-height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .game-container {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 2rem;
+      width: 90%;
+      max-width: 500px;
+      position: relative;
+      box-shadow: 0 0 40px rgba(0, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .game-container::before {
+      content: '';
+      position: absolute;
+      top: -5px;
+      left: -5px;
+      right: -5px;
+      bottom: -5px;
+      background: linear-gradient(45deg, #ff00ff, #00ffff, #ff00ff);
+      z-index: -1;
+      border-radius: 25px;
+      filter: blur(15px);
+      opacity: 0.5;
+      animation: borderGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes borderGlow {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 0.8; }
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      color: #fff;
+      text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    }
+
+    .game-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .game-title i {
+      color: #00ffff;
+    }
+
+    .number-range {
+      text-align: center;
+      margin: 1rem 0;
+      font-size: 1.2rem;
+      color: #00ffff;
+      text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+    }
+
+    .number-pad {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin: 2rem 0;
+    }
+
+    .number-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      font-size: 1.5rem;
+      padding: 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .number-btn:hover {
+      background: rgba(0, 255, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+    }
+
+    .number-btn:active {
+      transform: translateY(0);
+    }
+
+    #result {
+      text-align: center;
+      min-height: 60px;
+      margin: 1rem 0;
+      padding: 1rem;
+      border-radius: 10px;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+    }
+
+    .success {
+      background: rgba(0, 255, 127, 0.2);
+      border: 1px solid rgba(0, 255, 127, 0.3);
+      animation: successPulse 2s infinite;
+    }
+
+    .error {
+      background: rgba(255, 0, 127, 0.2);
+      border: 1px solid rgba(255, 0, 127, 0.3);
+    }
+
+    @keyframes successPulse {
+      0% { box-shadow: 0 0 10px rgba(0, 255, 127, 0.5); }
+      50% { box-shadow: 0 0 20px rgba(0, 255, 127, 0.8); }
+      100% { box-shadow: 0 0 10px rgba(0, 255, 127, 0.5); }
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .stat-box {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1rem;
+      border-radius: 10px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      color: #00ffff;
+      text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+    }
+
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="particles" id="particles"></div>
+  
+  <div class="game-container">
+    <div class="game-title">
+      <h1><i class="fas fa-crown"></i> Number Master</h1>
+    </div>
+
+    <div class="number-range">
+      Guess the number between 1 and 10
+    </div>
+
+    <div id="result"></div>
+
+    <div class="number-pad">
+      <button class="number-btn" onclick="submitGuess(1)">1</button>
+      <button class="number-btn" onclick="submitGuess(2)">2</button>
+      <button class="number-btn" onclick="submitGuess(3)">3</button>
+      <button class="number-btn" onclick="submitGuess(4)">4</button>
+      <button class="number-btn" onclick="submitGuess(5)">5</button>
+      <button class="number-btn" onclick="submitGuess(6)">6</button>
+      <button class="number-btn" onclick="submitGuess(7)">7</button>
+      <button class="number-btn" onclick="submitGuess(8)">8</button>
+      <button class="number-btn" onclick="submitGuess(9)">9</button>
+      <button class="number-btn" onclick="submitGuess(10)">10</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat-box">
+        <div class="stat-value" id="attemptsDisplay">0</div>
+        <div>Attempts</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="bestScore">-</div>
+        <div>Best Score</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let attempts = 0;
+    let bestScore = localStorage.getItem('bestScore') || '-';
+    updateStats();
+
+    // Create floating particles
+    function createParticles() {
+      const particles = document.getElementById('particles');
+      for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        particle.style.position = 'absolute';
+        particle.style.width = '2px';
+        particle.style.height = '2px';
+        particle.style.background = `rgba(${Math.random() * 255}, ${Math.random() * 255}, 255, 0.5)`;
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.animation = `float ${3 + Math.random() * 4}s ease-in-out infinite`;
+        particle.style.animationDelay = `-${Math.random() * 5}s`;
+        particles.appendChild(particle);
+      }
+    }
+
+    function updateStats() {
+      document.getElementById('attemptsDisplay').textContent = attempts;
+      document.getElementById('bestScore').textContent = bestScore;
+    }
+
+    async function submitGuess(guess) {
+      const result = document.getElementById('result');
+      
+      try {
+        const response = await fetch(`http://localhost:3000/guess/${guess}`);
+        const data = await response.json();
+        
+        attempts++;
+        updateStats();
+
+        if (data.message.includes('Correct')) {
+          result.className = 'success';
+          
+          // Update best score
+          const newScore = attempts;
+          if (bestScore === '-' || newScore < parseInt(bestScore)) {
+            bestScore = newScore;
+            localStorage.setItem('bestScore', bestScore);
+          }
+          
+          // Add celebration effect
+          createCelebration();
+          
+          setTimeout(() => {
+            if (confirm('🎉 Amazing! Want to play again?')) {
+              resetGame();
+            }
+          }, 1500);
+        } else {
+          result.className = 'error';
+        }
+        
+        result.textContent = data.message;
+      } catch (error) {
+        result.textContent = 'Oops! Something went wrong. Please try again.';
+        result.className = 'error';
+      }
+    }
+
+    function createCelebration() {
+      // Add celebration particles
+      for (let i = 0; i < 30; i++) {
+        const particle = document.createElement('div');
+        particle.style.position = 'fixed';
+        particle.style.width = '10px';
+        particle.style.height = '10px';
+        particle.style.background = `rgba(${Math.random() * 255}, ${Math.random() * 255}, 255, 0.8)`;
+        particle.style.left = '50%';
+        particle.style.top = '50%';
+        particle.style.borderRadius = '50%';
+        particle.style.transform = `translate(-50%, -50%)`;
+        particle.style.animation = `celebrate 1s ease-out forwards`;
+        particle.style.animationDelay = `${Math.random() * 0.5}s`;
+        document.body.appendChild(particle);
+        
+        setTimeout(() => particle.remove(), 2000);
+      }
+    }
+
+    function resetGame() {
+      attempts = 0;
+      updateStats();
+      const result = document.getElementById('result');
+      result.textContent = '';
+      result.className = '';
+    }
+
+    // Initialize particles
+    createParticles();
+
+    // Add keypress support
+    document.addEventListener('keypress', (e) => {
+      const num = parseInt(e.key);
+      if (num >= 1 && num <= 10) {
+        submitGuess(num);
+      }
+    });
+  </script>
+</body>
+</html>
